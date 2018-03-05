@@ -19,7 +19,7 @@ class PostListView(ListView):
     model = Post
 
     def get_queryset(self):
-        return Post.objects.filter(published_date__lte=timezone.now().order_by('-published_date'))
+        return Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
 
 
 class PostDetailView(DetailView):
@@ -74,7 +74,7 @@ def add_comment_to_post(request, pk):
 
 @login_required
 def comment_approve(request, pk):
-    comment = get_object_or_404(Comment, pk)
+    comment = get_object_or_404(Comment, pk=pk)
     comment.approve()
     return redirect('post_detail', pk=comment.post.pk)
 
@@ -91,4 +91,4 @@ def comment_remove(request, pk):
 def post_publish(request, pk):
     post = get_object_or_404(Post, pk=pk)
     post.publish()
-    return redirect('post_detail')
+    return redirect('post_detail', pk=post.pk)
